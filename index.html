@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PvP Event Registration</title>
+  <style>
+    body {
+      background-color: #0e0e0e;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .form-container {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .form-container img {
+      width: 100px;
+      margin-bottom: 15px;
+    }
+    h2 {
+      text-align: center;
+      color: #ff00aa;
+    }
+    input, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    input {
+      background: #2c2c2c;
+      color: white;
+    }
+    button {
+      background-color: #ff00aa;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #cc0088;
+    }
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff00aa;
+      border-radius: 50%;
+      animation: pop 1s ease-out forwards;
+    }
+    @keyframes pop {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <div class="form-container">
+    <img src="https://assets.onecompiler.app/43am9xxy6/43jdp9gjs/1000007133.png" alt="PvP Logo">
+    <h2>PvP Event Registration</h2>
+    <form id="pvpForm">
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="text" id="realname" placeholder="Your Real Name" required>
+      <input type="text" id="mcusername" placeholder="Minecraft Username" required>
+      <input type="text" id="discord" placeholder="Discord Username (e.g., Vincy#1234)" required>
+      <input type="password" id="password" placeholder="Enter Password" required>
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1374710498775531610/uYUVQv3lsGQ2foadHYaYKkO3c-WspFe181xhssaLVdVf9MWi1YsKTL9PlDRRgfPKB4fg";
+    const secretPassword = "CYCLONESMP02";
+
+    function spawnParticles(count = 40) {
+      const container = document.getElementById("particles");
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.top = Math.random() * 100 + "%";
+        container.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+      }
+    }
+
+    document.getElementById('pvpForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const realname = document.getElementById('realname').value.trim();
+      const mcusername = document.getElementById('mcusername').value.trim();
+      const discord = document.getElementById('discord').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (password !== secretPassword) {
+        alert("❌ Password is incorrect!");
+        return;
+      }
+
+      const submissions = JSON.parse(localStorage.getItem('pvp_submissions') || '[]');
+      const duplicate = submissions.find(entry => entry.email === email || entry.mcusername === mcusername);
+
+      if (duplicate) {
+        alert("⚠️ Form already submitted with this Email or Minecraft Username!");
+        return;
+      }
+
+      submissions.push({ email, mcusername });
+      localStorage.setItem('pvp_submissions', JSON.stringify(submissions));
+
+      spawnParticles(); // Show particles immediately
+
+      const embed = {
+        embeds: [
+          {
+            title: "PvP Event Registration",
+            color: 0xff00aa,
+            fields: [
+              { name: "📧 Email", value: email, inline: false },
+              { name: "🙍 Real Name", value: realname, inline: false },
+              { name: "🎮 Minecraft Username", value: mcusername, inline: false },
+              { name: "💬 Discord", value: discord, inline: false }
+            ],
+            footer: {
+              text: "New PvP Event Registration",
+              icon_url: "https://assets.onecompiler.app/43am9xxy6/43jdp9gjs/1000007133.png"
+            },
+            timestamp: new Date()
+          }
+        ]
+      };
+
+      fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(embed)
+      }).then(() => {
+        alert("✅ Registration Successful!");
+        document.getElementById('pvpForm').reset();
+      }).catch((error) => {
+        alert("❌ Failed to send registration to Discord.");
+        console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>
