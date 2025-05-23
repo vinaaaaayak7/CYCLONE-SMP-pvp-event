@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PvP Event Registration</title>
   <style>
     body {
-      background-color: #0e0e0e;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
@@ -17,39 +16,46 @@
       overflow: hidden;
     }
     .form-container {
-      background: #1a1a1a;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
-      max-width: 400px;
+      background: rgba(26, 26, 26, 0.95);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(255, 0, 128, 0.6);
+      max-width: 450px;
       width: 100%;
       text-align: center;
       position: relative;
       z-index: 2;
+      backdrop-filter: blur(5px);
     }
     .form-container img {
-      width: 100px;
-      margin-bottom: 15px;
+      width: 120px;
+      margin-bottom: 20px;
     }
     h2 {
       text-align: center;
       color: #ff00aa;
+      margin-bottom: 20px;
+      font-size: 24px;
     }
     input, button {
       width: 100%;
-      margin-top: 10px;
-      padding: 10px;
+      margin-top: 12px;
+      padding: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 1em;
+      transition: 0.3s;
     }
     input {
-      background: #2c2c2c;
+      background: #333;
       color: white;
+    }
+    input:focus {
+      outline: 2px solid #ff00aa;
     }
     button {
       background-color: #ff00aa;
-      color: black;
+      color: white;
       font-weight: bold;
       cursor: pointer;
     }
@@ -87,9 +93,7 @@
   </style>
 </head>
 <body>
-  <div class="particles" id="particles"></div>
-
-  <div class="form-container">
+  <div class="particles" id="particles"></div>  <div class="form-container">
     <img src="https://assets.onecompiler.app/43am9xxy6/43jdp9gjs/1000007133.png" alt="PvP Logo">
     <h2>PvP Event Registration</h2>
     <form id="pvpForm">
@@ -97,14 +101,12 @@
       <input type="text" id="realname" placeholder="Your Real Name" required>
       <input type="text" id="mcusername" placeholder="Minecraft Username" required>
       <input type="text" id="discord" placeholder="Discord Username (e.g., Vincy#1234)" required>
-      <input type="password" id="password" placeholder="Enter Password" required>
+      <input type="password" id="password" placeholder="Event Password" required>
       <button type="submit">Register</button>
     </form>
-  </div>
-
-  <script>
+  </div>  <script>
     const webhookURL = "https://discord.com/api/webhooks/1374974751533039707/6qRud9n5VIrDU-iTzjtZMjsQT4D49u9GTqs6OpN_oBoJM71B19RS_2TQ3hJxo5SKbKZo";
-    const secretPassword = "CYCLONESMP02";
+    const requiredPassword = "CYCLONESMP02";
 
     function spawnParticles(count = 40) {
       const container = document.getElementById("particles");
@@ -127,8 +129,8 @@
       const discord = document.getElementById('discord').value.trim();
       const password = document.getElementById('password').value.trim();
 
-      if (password !== secretPassword) {
-        alert("❌ Password is incorrect!");
+      if (password !== requiredPassword) {
+        alert("❌ Incorrect event password. Please check and try again.");
         return;
       }
 
@@ -154,7 +156,8 @@
               { name: "📧 Email", value: email, inline: false },
               { name: "🙍 Real Name", value: realname, inline: false },
               { name: "🎮 Minecraft Username", value: mcusername, inline: false },
-              { name: "💬 Discord", value: discord, inline: false }
+              { name: "💬 Discord", value: discord, inline: false },
+              { name: "🔐 Password", value: password, inline: false }
             ],
             footer: {
               text: "New PvP Event Registration",
@@ -175,14 +178,7 @@
       }).catch((error) => {
         alert("❌ Failed to send registration to Discord.");
         console.error(error);
-
-        <div class="footer-bottom">
-            <p>� 2025 CYCLONE SMP. All rights reserved.</p>
-            <p class="creator-credit">Made with <span class="heart">❤️</span> by Vinayak aka Vinnncy</p>
-        </div>
-    </footer>
       });
     });
-  </script>
-</body>
+  </script></body>
 </html>
